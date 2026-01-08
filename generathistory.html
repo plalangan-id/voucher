@@ -182,7 +182,7 @@
         d.setDate(d.getDate() + parseInt(durasiVal));
         const tglBerakhirStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + " pukul " + jam;
 
-        const pesan = encodeURIComponent(`*sebelum LOGIN Gunakan MAC PERANGKAT / PONSEL*\n\n🚀 KODE: *${codeInput.value}*\n⏳ AKTIF: *${labelDurasi}*\n\n🚫 *BERAKHIR: ${tglBerakhirStr}*\n\nsimpan KODE selamana masih aktiv!_`);
+        const pesan = encodeURIComponent(`*sebelum LOGIN Gunakan MAC PERANGKAT / PONSEL*\n\n🚀 KODE: *${codeInput.value}*\n⏳ AKTIF: *${labelDurasi}*\n\n🚫 *BERAKHIR: ${tglBerakhirStr}*\n\nsimpan KODE selama masih aktiv_antisipasi login ulang `);
         window.open(`https://wa.me/${wa}?text=${pesan}`, '_blank');
 
         await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'addHistory', nama, kode: codeInput.value, durasi: labelDurasi, tglBerakhir: tglBerakhirStr })});
