@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Pro - Modern UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #10b981;
+            --blue: #3b82f6;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0; padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container { max-width: 450px; margin: auto; }
+
+        /* Header */
+        .header-box { text-align: center; margin-bottom: 30px; }
+        .header-box h1 { 
+            font-size: 22px; font-weight: 800; letter-spacing: 1px; margin: 0;
+            background: linear-gradient(90deg, var(--accent), var(--blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* Registration Panel */
+        .glass-panel {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px; padding: 20px; margin-bottom: 25px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+        }
+
+        .input-group { margin-bottom: 12px; }
+        .input-group label { font-size: 10px; font-weight: 800; color: var(--blue); text-transform: uppercase; margin-left: 5px; }
+
+        input, select {
+            width: 100%; padding: 12px 16px; margin-top: 5px; 
+            border-radius: 12px; border: 1px solid #334155; 
+            background: #020617; color: white; box-sizing: border-box;
+            transition: 0.3s; outline: none; font-size: 14px;
+        }
+        
+        input:focus { border-color: var(--blue); }
+
+        .btn-blue {
+            width: 100%; background: var(--blue); color: white;
+            border: none; padding: 14px; border-radius: 12px;
+            font-weight: 700; cursor: pointer; margin-top: 10px;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.3);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            border: 2px solid var(--accent) !important;
+            position: sticky; top: 10px; z-index: 100;
+            background: var(--bg) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Pelanggan Card */
+        .id-card {
+            background: var(--card); border-radius: 20px;
+            padding: 20px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.2s;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card-name { font-size: 18px; font-weight: 800; color: var(--text); }
+        .card-wa { font-size: 12px; color: var(--text-dim); margin-bottom: 15px; display: block; }
+
+        .v-input {
+            background: #020617 !important;
+            border: 1px dashed var(--accent) !important;
+            color: var(--accent) !important;
+            font-family: 'monospace';
+            font-size: 20px !important; font-weight: 800;
+            text-align: center; letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .action-row { display: flex; gap: 10px; }
+
+        .btn-wa {
+            background: #059669; color: white; flex: 2;
+            padding: 14px; border: none; border-radius: 12px;
+            font-weight: 800; cursor: pointer; transition: 0.2s;
+        }
+
+        select.durasi-select { flex: 1; margin: 0; }
+
+        /* History Section */
+        .h-box {
+            margin-top: 20px; padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .h-title { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        
+        .h-item {
+            background: rgba(0,0,0,0.2); border-radius: 12px;
+            padding: 12px; margin-bottom: 8px;
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        
+        .h-top { display: flex; justify-content: space-between; align-items: center; }
+        .h-code { color: var(--accent); font-weight: 800; font-size: 14px; }
+        .h-tag { font-size: 9px; background: var(--blue); padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+        .h-exp { font-size: 11px; color: var(--danger); font-weight: 600; }
+
+        #loading { text-align: center; font-size: 12px; color: var(--blue); margin: 15px 0; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-box">
+        <h1>WIFI VOUCHER PRO</h1>
+        <p style="font-size: 11px; color: var(--text-dim);">Voucher Management System</p>
+    </div>
+
+    <div class="glass-panel">
+        <div class="input-group">
+            <label>Pendaftaran Baru</label>
+            <input type="text" id="newN" placeholder="Nama Lengkap">
+            <input type="number" id="newW" placeholder="628xxxx">
+        </div>
+        <button class="btn-blue" onclick="addContact()">DAFTARKAN PELANGGAN</button>
+    </div>
+
+    <input type="text" id="search" class="search-bar" onkeyup="render()" placeholder="🔍 Cari nama atau nomor...">
+    
+    <div id="loading">MENYINKRONKAN DATA...</div>
+    <div id="displayArea"></div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxJfnE0ilQOMeF6D8LeJxl5tUB8_Uxa2exHmm11TEFnVKH6zaIAzdJJKhZNrdsU88EMNA/exec'; 
+    let db = { pelanggan: [], history: [] };
+
+    async function fetchData() {
+        document.getElementById('loading').style.display = 'block';
+        try { const res = await fetch(scriptURL); db = await res.json(); render(); } catch (e) { }
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    async function addContact() {
+        const nama = document.getElementById('newN').value;
+        const wa = document.getElementById('newW').value;
+        if(!nama || !wa) return alert("Data tidak lengkap!");
+        document.getElementById('loading').style.display = 'block';
+        await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'addContact', nama, wa })});
+        document.getElementById('newN').value = ''; document.getElementById('newW').value = '';
+        fetchData();
+        alert("Berhasil didaftarkan!");
+    }
+
+    async function kirim(nama, wa) {
+        const codeInput = document.getElementById(`v-${nama}`);
+        const durasiVal = document.getElementById(`d-${nama}`).value;
+        const labelDurasi = document.getElementById(`d-${nama}`).options[document.getElementById(`d-${nama}`).selectedIndex].text;
+        
+        if(!codeInput.value) return alert("Kode belum diisi!");
+
+        const d = new Date();
+        const jam = d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+        const tglKirimStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + " pukul " + jam;
+        
+        d.setDate(d.getDate() + parseInt(durasiVal));
+        const tglBerakhirStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + " pukul " + jam;
+
+        const pesan = encodeURIComponent(`*sebelum LOGIN *\n\nGunakan MAC PERANGKAT / PONSEL*,\n🚀 KODE: *${codeInput.value}*\n⏳ AKTIF: *${labelDurasi}*\n\n🚫 *BERAKHIR: ${tglBerakhirStr}*\n\nsimpan KODE selamana masih aktiv!_`);
+        window.open(`https://wa.me/${wa}?text=${pesan}`, '_blank');
+
+        await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'addHistory', nama, kode: codeInput.value, durasi: labelDurasi, tglBerakhir: tglBerakhirStr })});
+        codeInput.value = ''; fetchData();
+    }
+
+    function formatTgl(tglInput) {
+        if (!tglInput) return 'N/A';
+        if (tglInput.toString().includes('T')) {
+            const d = new Date(tglInput);
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + 
+                   " pkl " + d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+        }
+        return tglInput.replace("pukul", "pkl");
+    }
+
+    function render() {
+        const q = document.getElementById('search').value.toLowerCase();
+        const area = document.getElementById('displayArea');
+        area.innerHTML = '';
+        if (q.length < 1) return;
+
+        db.pelanggan.filter(p => p[0].toLowerCase().includes(q)).forEach(p => {
+            const userHistory = db.history.filter(h => h[0] === p[0]).reverse().slice(0, 2);
+            let hHTML = userHistory.map(h => `
+                <div class="h-item">
+                    <div class="h-top">
+                        <span class="h-code">${h[2]}</span>
+                        <span class="h-tag">${h[3]}</span>
+                    </div>
+                    <span class="h-exp">⌛ Habis: ${formatTgl(h[4])}</span>
+                </div>
+            `).join('');
+
+            area.innerHTML += `
+                <div class="id-card">
+                    <span class="card-name">${p[0]}</span>
+                    <span class="card-wa">WhatsApp: +${p[1]}</span>
+                    
+                    <input type="text" id="v-${p[0]}" class="v-input" placeholder="KETIK KODE">
+                    
+                    <div class="action-row">
+                        <select id="d-${p[0]}" class="durasi-select">
+                            <option value="1">1 Hari</option>
+                            <option value="7">1 Minggu</option>
+                            <option value="30">1 Bulan</option>
+                        </select>
+                        <button class="btn-wa" onclick="kirim('${p[0]}', '${p[1]}')">KIRIM VOUCHER</button>
+                    </div>
+
+                    <div class="h-box">
+                        <div class="h-title">Riwayat Voucher</div>
+                        ${hHTML || '<div style="font-size:11px; color:var(--text-dim)">Belum ada data transaksi</div>'}
+                    </div>
+                </div>`;
+        });
+    }
+    fetchData();
+</script>
+</body>
+</html>
